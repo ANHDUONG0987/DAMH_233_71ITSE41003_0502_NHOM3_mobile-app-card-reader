@@ -1,56 +1,78 @@
-// Giả định một lớp Card để quản lý thông tin thẻ
-class Card {
-    String cardNumber;
-    String cardHolderName;
-    String expiryDate;
+import json
 
-    // Constructor
-    public Card(String cardNumber, String cardHolderName, String expiryDate) {
-        this.cardNumber = cardNumber;
-        this.cardHolderName = cardHolderName;
-        this.expiryDate = expiryDate;
-    }
-}
+class Card:
+    def __init__(self, card_id, account_holder, account_number):
+        self.card_id = card_id
+        self.account_holder = account_holder
+        self.account_number = account_number
 
-// Giả định một lớp CardManager để quản lý danh sách thẻ
-class CardManager {
-    List<Card> cardList = new ArrayList<>();
+    def to_dict(self):
+        return {
+            "card_id": self.card_id,
+            "account_holder": self.account_holder,
+            "account_number": self.account_number
+        }
 
-    // Thêm thẻ vào danh sách
-    public void addCard(Card card) {
-        cardList.add(card);
-    }
+class CardManager:
+    def __init__(self, storage_file):
+        self.storage_file = storage_file
+        self.cards = self.load_cards()
 
-    // Xóa thẻ khỏi danh sách
-    public void removeCard(Card card) {
-        cardList.remove(card);
-    }
+    def load_cards(self):
+        try:
+            with open(self.storage_file, 'r') as file:
+                return json.load(file)
+        except FileNotFoundError:
+            return {}
 
-    // Lấy danh sách thẻ
-    public List<Card> getCardList() {
-        return cardList;
-    }
-}
+    def save_cards(self):
+        with open(self.storage_file, 'w') as file:
+            json.dump(self.cards, file, indent=4)
 
-// Mẫu kiểm thử
-public class CardManagerTest {
-    public static void main(String[] args) {
-        CardManager cardManager = new CardManager();
+    def add_card(self, card):
+        self.cards[card.card_id] = card.to_dict()
+        self.save_cards()
+        print(f"Added card: {card.to_dict()}")
 
-        // Thêm thẻ vào danh sách
-        Card card1 = new Card("1234 5678 9012 3456", "John Doe", "12/24");
-        Card card2 = new Card("9876 5432 1098 7654", "Jane Smith", "11/23");
-        cardManager.addCard(card1);
-        cardManager.addCard(card2);
+    def delete_card(self, card_id):
+        if card_id in self.cards:
+            del self.cards[card_id]
+            self.save_cards()
+            print(f"Deleted card with ID: {card_id}")
+        else:
+            print(f"Card with ID: {card_id} not found")
 
-        // Kiểm tra xem thẻ có trong danh sách hay không
-        assert cardManager.getCardList().contains(card1);
-        assert cardManager.getCardList().contains(card2);
+    def list_cards(self):
+        for card_id, card_info in self.cards.items():
+            print(f"Card ID: {card_id}, Account Holder: {card_info['account_holder']}, Account Number: {card_info['account_number']}")
 
-        // Xóa thẻ khỏi danh sách
-        cardManager.removeCard(card1);
+    def select_card(self, card_id):
+        if card_id in self.cards:
+            print(f"Selected card: {self.cards[card_id]}")
+            return self.cards[card_id]
+        else:
+            print(f"Card with ID: {card_id} not found")
+            return None
 
-        // Kiểm tra xem thẻ đã bị xóa hay chưa
-        assert !cardManager.getCardList().contains(card1);
-    }
-}
+# Example usage
+manager = CardManager("cards_storage.json")
+
+# Add some cards
+manager.add_card(Card("1", "John Doe", "123456789"))
+manager.add_card(Card("2", "Jane Smith", "987654321"))
+
+# List all cards
+print("All cards:")
+manager.list_cards()
+
+# Select a card to interact with
+print("\nSelecting card with ID '1':")
+selected_card = manager.select_card("1")
+
+# Delete a card
+print("\nDeleting card with ID '2':")
+manager.delete_card("2")
+
+# List all cards after deletion
+print("\nAll cards after deletion:")
+manager.list_cards()
