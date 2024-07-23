@@ -24,7 +24,10 @@
             <p><b>Khoa Công nghệ thông tin</b></p>
         </section>
     </div>
-    body {
+   
+</body>
+</html>
+body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
@@ -75,5 +78,3 @@ ul {
 ul li {
     margin-bottom: 5px;
 }
-</body>
-</html>
