@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV CỦA CÁC THÀNH VIÊN THAM GIA ĐỒ ÁN MÔN HỌC NHẬP MÔN CÔNG NGHỆ PHẦN MỀM</title>
-    <style>body {
+    <style>
+        body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
         margin: 0;
