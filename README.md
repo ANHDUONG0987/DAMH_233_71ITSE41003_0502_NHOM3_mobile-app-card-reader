@@ -13,8 +13,8 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-}
-body {
+	}
+	body {
 	background-color: rgb(253, 254, 255);
 	display: flex;
 	justify-content: center;
